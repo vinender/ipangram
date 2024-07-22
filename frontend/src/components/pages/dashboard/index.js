@@ -17,11 +17,15 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize] = useState(4);
+  const [nameFilter, setNameFilter] = useState('');
+  const [locationFilter, setLocationFilter] = useState('');
 
 
   useEffect(() => {
     fetchUserData();
     fetchDepartments();
+    setNameFilter('');
+    setLocationFilter('');
     fetchEmployees(1);
   }, []);
 
@@ -96,16 +100,16 @@ const Dashboard = () => {
     }
   };
 
-  const handleFilterEmployees = async (page = 1) => {
+  const handleFilterEmployees = async (page = currentPage) => {
     try {
       let url = `/employees/filter?page=${page}&pageSize=${pageSize}&`;
       
-      if (location) {
-        if (sortBy === 'userName') {
-          url += `userName=${encodeURIComponent(location)}&`;
-        } else {
-          url += `location=${encodeURIComponent(location)}&`;
-        }
+      if (nameFilter) {
+        url += `userName=${encodeURIComponent(nameFilter)}&`;
+      }
+      
+      if (locationFilter) {
+        url += `location=${encodeURIComponent(locationFilter)}&`;
       }
       
       url += `sortBy=${sortBy}&order=${order}`;
@@ -171,20 +175,27 @@ const Dashboard = () => {
         <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Employees</h2>
         <div className="flex mb-4">
-            <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder={sortBy === 'userName' ? "Filter by name" : "Filter by location"}
-                className="flex-grow mr-2 p-2 border rounded"
-            />
-           <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="mr-2 p-2 border rounded"
-                >
-                <option value="userName">Sort by Name</option>
-                <option value="location">Sort by Location</option>
+        <input
+          type="text"
+          value={nameFilter}
+          onChange={(e) => setNameFilter(e.target.value)}
+          placeholder="Filter by name"
+          className="flex-grow mr-2 p-2 border rounded"
+        />
+        <input
+          type="text"
+          value={locationFilter}
+          onChange={(e) => setLocationFilter(e.target.value)}
+          placeholder="Filter by location"
+          className="flex-grow mr-2 p-2 border rounded"
+        />
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="mr-2 p-2 border rounded"
+          >
+            <option value="name">Sort by Name</option>
+            <option value="location">Sort by Location</option>
           </select>
             <select
             value={order}
@@ -194,9 +205,19 @@ const Dashboard = () => {
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
             </select>
-            <button onClick={handleFilterEmployees} className="bg-blue-500 text-white px-4 py-2 rounded">
-            Apply Filter
+            <button onClick={() => handleFilterEmployees(1)} className="bg-blue-500 text-white px-4 py-2 rounded">
+              Apply Filter
             </button>
+            <button 
+                onClick={() => {
+                  setNameFilter('');
+                  setLocationFilter('');
+                  handleFilterEmployees(1);
+                }} 
+                className="bg-gray-500 text-white px-4 py-2 rounded ml-2"
+              >
+                Clear Filters
+              </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {employees?.map((employee) => (
@@ -223,21 +244,21 @@ const Dashboard = () => {
           ))}
         </div>
     <div className="mt-4 flex justify-between items-center">
-      <button 
-        onClick={() => handleFilterEmployees(currentPage - 1)} 
-        disabled={currentPage === 1}
-        className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
-      >
-        Previous
-      </button>
-      <span>Page {currentPage} of {totalPages}</span>
-      <button 
-        onClick={() => handleFilterEmployees(currentPage + 1)} 
-        disabled={currentPage === totalPages}
-        className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
-      >
-        Next
-      </button>
+        <button 
+          onClick={() => handleFilterEmployees(currentPage - 1)} 
+          disabled={currentPage === 1}
+          className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
+        >
+          Previous
+        </button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <button 
+          onClick={() => handleFilterEmployees(currentPage + 1)} 
+          disabled={currentPage === totalPages}
+          className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
+        >
+          Next
+    </button>
     </div>
         </div>
 
