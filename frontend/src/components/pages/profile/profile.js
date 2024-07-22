@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import useAuth from '../../utils/useAuth';
-import { useSelector } from 'react-redux';
-import useCurrentUserDetails from '../../utils/currentUserDetails';
+   import useCurrentUserDetails from '../../utils/currentUserDetails';
 import http from '../../utils/http';
 import { useNavigate } from 'react-router-dom';
-import GooglePlacesAutocomplete from '../../GooglePlacesAutocomplete';
-import Uploader from '../../uploader/uploader';
+ import Uploader from '../../uploader/uploader';
 
 const Profile = () => {
   const { userDetails, loading, error } = useCurrentUserDetails();
@@ -54,16 +50,7 @@ const Profile = () => {
     setFormData({ ...formData, profilePic: imageUrl });
   };
 
-  const handleAddressSelect = (address) => {
-    setFormData({
-      ...formData,
-      address: {
-        formattedAddress: address.formattedAddress,
-        latitude: address.latitude,
-        longitude: address.longitude,
-      },
-    });
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

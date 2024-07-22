@@ -30,8 +30,7 @@ const EmployeeDetails = () => {
         <p><strong>Email:</strong> {employee.email}</p>
         <p><strong>Location:</strong> {employee.location}</p>
         <p><strong>Department:</strong> {employee.department || 'Not assigned'}</p>
-        {/* Add more details as needed */}
-      </div>
+       </div>
     </div>
   );
 };
