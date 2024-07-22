@@ -11,6 +11,7 @@ router.get('/', authenticate, getAllEmployees);
 router.get('/filter', authenticate, filterEmployees);
 router.get('/:id', authenticate, getEmployeeDetails);
 router.post('/:employeeId/assign-department', authenticate, isManager, assignDepartment);
+router.get('/employees/:id', getEmployeeDetails);
 
 
 module.exports = router;

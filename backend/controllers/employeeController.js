@@ -28,8 +28,7 @@ exports.getAllEmployees = async (req, res) => {
   
   exports.getEmployeeDetails = async (req, res) => {
     try {
-      const { id } = req.params;
-      const employee = await User.findById(id).select('-password');
+      const employee = await User.findById(req.params.id).select('-password');
       if (!employee) {
         return res.status(404).json({ message: 'Employee not found' });
       }
@@ -38,6 +37,8 @@ exports.getAllEmployees = async (req, res) => {
       res.status(500).json({ message: 'Error fetching employee details', error: error.message });
     }
   };
+
+
   
   exports.filterEmployees = async (req, res) => {
     try {

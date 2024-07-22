@@ -5,6 +5,7 @@ import Layout from './components/layout/layout';
 import AuthPage from './components/pages/auth/login';
 import LoginPage from './components/pages/auth/login';
 import Dashboard from './components/pages/dashboard';
+import EmployeeDetails from './components/employee-details';
   
 function App() {
 
@@ -26,6 +27,13 @@ function App() {
           element={<Layout><Dashboard /></Layout>}
           path="/dashboard"
         />
+
+        <Route 
+          path="/employee/:id" 
+          element={<Layout>
+            <EmployeeDetails/>
+          </Layout>}
+         />
          
         
       </Routes>
