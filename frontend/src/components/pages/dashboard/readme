@@ -1,0 +1,92 @@
+# Dashboard Component
+
+## Overview
+
+The Dashboard component is a key feature of our employee management system. It provides an interface for managers to view and manage employees, including filtering, pagination, and access to detailed employee information.
+
+## Features
+
+1. Employee listing with pagination
+2. Filtering employees by name or location
+3. Sorting employees by name or location
+4. Department management (for managers only)
+5. Quick view of employee details in card format
+6. Navigation to detailed employee information
+
+## Component Structure
+
+```jsx
+const Dashboard = () => {
+  // State variables
+  // useEffect hooks
+  // Helper functions
+  // Render method
+}
+State Variables
+
+user: Stores current user information
+departments: List of departments
+employees: List of employees
+currentPage: Current page number for pagination
+totalPages: Total number of pages
+pageSize: Number of employees per page
+location: Filter input for location/name
+sortBy: Current sort field (userName or location)
+order: Sort order (asc or desc)
+
+Key Functions
+fetchEmployees(page = 1)
+Fetches paginated employee data from the server.
+handleFilterEmployees(page = 1)
+Applies filters and fetches filtered, paginated employee data.
+handleAssignDepartment(employeeId, departmentId)
+Assigns a department to an employee (manager only).
+handleCreateDepartment(e)
+Creates a new department (manager only).
+handleUpdateDepartment(e)
+Updates an existing department (manager only).
+handleDeleteDepartment(id)
+Deletes a department (manager only).
+Rendering
+The component renders:
+
+User welcome message
+Department management section (for managers)
+Employee filtering and sorting controls
+Grid of employee cards
+Pagination controls
+
+Employee Cards
+Each employee is displayed in a card format, showing:
+
+Name
+Email
+Location
+Department (if assigned)
+"View Details" button (links to EmployeeDetails page)
+"Assign Department" button (for managers)
+
+Pagination
+Pagination controls allow navigation between pages of employee data.
+Filtering and Sorting
+Users can filter employees by name or location and sort the results.
+Manager-specific Features
+Managers have additional capabilities:
+
+Create, update, and delete departments
+Assign departments to employees
+
+API Integration
+The component interacts with the backend API for:
+
+Fetching user data
+Fetching and managing departments
+Fetching, filtering, and paginating employee data
+Assigning departments to employees
+
+Routing
+The Dashboard component is typically rendered at the /dashboard route. It includes links to the EmployeeDetails component for each employee.
+Styling
+The component uses Tailwind CSS classes for styling, creating a responsive and visually appealing interface.
+Error Handling
+Error handling is implemented for API calls, with errors logged to the console.
