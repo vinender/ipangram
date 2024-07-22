@@ -10,7 +10,7 @@ forntend: yarn start
 cd /backend
 #Install Dependenciens
 
-backend: npm i --forcepi
+backend: npm i --force
 
 #start api
 backend:npm start
