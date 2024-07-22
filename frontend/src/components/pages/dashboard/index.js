@@ -8,22 +8,27 @@ const Dashboard = () => {
   const [newDepartment, setNewDepartment] = useState('');
   const [employees, setEmployees] = useState([]);
   const [assigningEmployee, setAssigningEmployee] = useState(null);
-   const [editingDepartment, setEditingDepartment] = useState(null);
+  const [editingDepartment, setEditingDepartment] = useState(null);
   const [location, setLocation] = useState('');
   const [sortBy, setSortBy] = useState('name');
   const [order, setOrder] = useState('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize] = useState(4);
 
 
   useEffect(() => {
     fetchUserData();
     fetchDepartments();
-    fetchEmployees();
+    fetchEmployees(1);
   }, []);
 
-  const fetchEmployees = async () => {
+  const fetchEmployees = async (page = 1) => {
     try {
-      const response = await http.get('/employees');
-      setEmployees(response.data);
+      const response = await http.get(`/employees?page=${page}&pageSize=${pageSize}`);
+      setEmployees(response.data.employees);
+      setTotalPages(response.data.totalPages);
+      setCurrentPage(page);
     } catch (error) {
       console.error('Error fetching employees:', error);
     }
@@ -89,9 +94,9 @@ const Dashboard = () => {
     }
   };
 
-  const handleFilterEmployees = async () => {
+  const handleFilterEmployees = async (page = 1) => {
     try {
-      let url = '/employees/filter?';
+      let url = `/employees/filter?page=${page}&pageSize=${pageSize}&`;
       
       if (location) {
         if (sortBy === 'userName') {
@@ -104,7 +109,9 @@ const Dashboard = () => {
       url += `sortBy=${sortBy}&order=${order}`;
       
       const response = await http.get(url);
-      setEmployees(response.data);
+      setEmployees(response.data.employees);
+      setTotalPages(response.data.totalPages);
+      setCurrentPage(page);
     } catch (error) {
       console.error('Error filtering employees:', error);
     }
@@ -207,6 +214,23 @@ const Dashboard = () => {
       </li>
     ))}
   </ul>
+    <div className="mt-4 flex justify-between items-center">
+      <button 
+        onClick={() => handleFilterEmployees(currentPage - 1)} 
+        disabled={currentPage === 1}
+        className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
+      >
+        Previous
+      </button>
+      <span>Page {currentPage} of {totalPages}</span>
+      <button 
+        onClick={() => handleFilterEmployees(currentPage + 1)} 
+        disabled={currentPage === totalPages}
+        className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
+      >
+        Next
+      </button>
+    </div>
         </div>
 
         {assigningEmployee && (

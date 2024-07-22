@@ -2,12 +2,28 @@ const User = require('../models/User');
 const Department = require('../models/Department');
 
 exports.getAllEmployees = async (req, res) => {
-    try {
-      const employees = await User.find({ role: 'employee' }).select('-password');
-      res.json(employees);
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching employees', error: error.message });
-    }
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const skip = (page - 1) * pageSize;
+
+    const totalEmployees = await User.countDocuments({ role: 'employee' });
+    const totalPages = Math.ceil(totalEmployees / pageSize);
+
+    const employees = await User.find({ role: 'employee' })
+      .select('-password')
+      .skip(skip)
+      .limit(pageSize);
+
+    res.json({
+      employees,
+      currentPage: page,
+      totalPages,
+      totalEmployees
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching employees', error: error.message });
+  }
   };
   
   exports.getEmployeeDetails = async (req, res) => {
@@ -25,8 +41,9 @@ exports.getAllEmployees = async (req, res) => {
   
   exports.filterEmployees = async (req, res) => {
     try {
-        console.log('filter employee',req.body)
-      const { location, userName, sortBy, order } = req.query;
+      console.log('filter employee', req.query);
+      const { location, userName, sortBy, order, page = 1, pageSize = 10 } = req.query;
+      
       let query = { role: 'employee' };
       if (location) {
         query.location = new RegExp(location, 'i');
@@ -34,10 +51,24 @@ exports.getAllEmployees = async (req, res) => {
       if (userName) {
         query.userName = new RegExp(userName, 'i');
       }
+  
+      const skip = (parseInt(page) - 1) * parseInt(pageSize);
+  
+      const totalEmployees = await User.countDocuments(query);
+      const totalPages = Math.ceil(totalEmployees / parseInt(pageSize));
+  
       const employees = await User.find(query)
         .select('-password')
-        .sort({ [sortBy]: order === 'desc' ? -1 : 1 });
-      res.json(employees);
+        .sort({ [sortBy]: order === 'desc' ? -1 : 1 })
+        .skip(skip)
+        .limit(parseInt(pageSize));
+  
+      res.json({
+        employees,
+        currentPage: parseInt(page),
+        totalPages,
+        totalEmployees
+      });
     } catch (error) {
       res.status(500).json({ message: 'Error filtering employees', error: error.message });
     }
