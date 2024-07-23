@@ -131,26 +131,25 @@ exports.getDepartmentDetails = async (req, res) => {
   }
 };
 
-
 exports.getDepartmentEmployees = async (req, res) => {
   try {
     console.log('getDepartmentEmployees', req.params);
-    
+
     const department = await Department.findById(req.params.id);
-    console.log('department name',department)
+    console.log('department name', department);
     if (!department) {
       return res.status(404).json({ message: 'Department not found' });
     }
 
-    // Now, use the department name to find employees
-    const employees = await User.find({ 
-      'department': department.name, 
-      role: 'employee' 
+     const departmentNameRegex = new RegExp(`^${department.name}$`, 'i');
+
+     const employees = await User.find({
+      'department': departmentNameRegex,
+      role: 'employee'
     }).select('-password');
 
     res.json(employees);
-    // const response = res.json(employees);
-    console.log('department employees',employees)
+    console.log('department employees', employees);
   } catch (error) {
     console.error('Error in getDepartmentEmployees:', error);
     res.status(500).json({ message: 'Error fetching department employees', error: error.message });

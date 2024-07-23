@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useCurrentUserDetails from '../../utils/currentUserDetails';
- 
+import { useNavigate } from "react-router-dom";
+
 
 export default function Home() {
   const { userDetails, loading, error } = useCurrentUserDetails();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (error || (!loading && !userDetails)) {
+      navigate('/login');
+    }
+  }, [error, loading, userDetails, navigate]);
 
   if (loading) {
     return <p className="text-center">Loading user details...</p>;
@@ -14,6 +22,9 @@ export default function Home() {
     return <p className="text-center text-red-500">Error loading user details: {error.message}</p>;
   }
 
+  if (!userDetails) {
+    return null; // Return null or some placeholder if userDetails are not available yet
+  }
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md">
