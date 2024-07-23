@@ -4,7 +4,7 @@ import Layout from './components/layout/layout';
    import Home from './components/pages/home/home';
 import AuthPage from './components/pages/auth/login';
 import LoginPage from './components/pages/auth/login';
-import Dashboard from './components/pages/dashboard';
+import Dashboard from './components/pages/details';
 import EmployeeDetails from './components/employee-details';
   
 function App() {
@@ -25,7 +25,7 @@ function App() {
         />
         <Route
           element={<Layout><Dashboard /></Layout>}
-          path="/dashboard"
+          path="/details"
         />
 
         <Route 

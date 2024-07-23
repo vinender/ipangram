@@ -128,3 +128,20 @@ exports.assignDepartment = async (req, res) => {
       res.status(500).json({ message: 'Error assigning department', error: error.message });
     }
   };
+
+  
+exports.getCurrentEmployee = async (req, res) => {
+  try {
+    const employeeId = req.user.id; // Assuming auth middleware attaches user id to req.user
+    const employee = await Employee.findById(employeeId).select('-password');
+
+    if (!employee) {
+      return res.status(404).json({ message: 'Employee not found' });
+    }
+
+    res.json(employee);
+  } catch (error) {
+    console.error('Error fetching current employee:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

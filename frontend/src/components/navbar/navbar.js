@@ -5,12 +5,16 @@ import { useSelector, useDispatch } from 'react-redux';
  import { Link } from 'react-router-dom';
 import { logout } from '../utils/redux/reducers/authActions';
 import { useNavigate } from 'react-router-dom';
+import useCurrentUserDetails from '../utils/currentUserDetails';
 
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const navigate = useNavigate();
+
+  const { userDetails, loading, error } = useCurrentUserDetails();
+
 
   const handleLogout = () => {
     dispatch(logout());
@@ -32,7 +36,7 @@ const Navbar = () => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           IPANGRAM
         </Typography>
-        {isLoggedIn ? (
+        {userDetails ? (
           <div>
             <IconButton
               size="large"
@@ -60,7 +64,7 @@ const Navbar = () => {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem component={Link} to="/profile" onClick={handleClose}><Person /> Profile</MenuItem>
+              {/* <MenuItem component={Link} to="/profile" onClick={handleClose}><Person /> Profile</MenuItem> */}
               <MenuItem onClick={handleLogout}><ExitToApp /> Logout</MenuItem>
             </Menu>
           </div>

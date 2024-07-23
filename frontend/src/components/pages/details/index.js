@@ -127,9 +127,12 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Welcome, {user.email}</h1>
-      <p className="mb-4">Your role: {user.role}</p>
-
+      <h1 className="text-2xl font-bold mb-4">Hi, {user.userName}</h1>
+      <p className="mb-4">Email: {user.email}</p>
+      <p className="mb-4">Address: {user.location}</p>
+      <p className="mb-4">Role: {user.role}</p>
+      <p className="mb-4">Department: {user.department}</p>
+      
       {user.role === 'manager' && (
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-2">Manage Departments</h2>
@@ -172,6 +175,7 @@ const Dashboard = () => {
         </div>
       )}
 
+        { user?.role === 'manager' && 
         <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Employees</h2>
         <div className="flex mb-4">
@@ -220,7 +224,7 @@ const Dashboard = () => {
               </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {employees?.map((employee) => (
+          {user?.role === 'manager' && employees?.map((employee) => (
             <div key={employee._id} className="bg-white shadow-md rounded-lg p-4">
               <h3 className="font-semibold text-lg">{employee.userName}</h3>
               <p>{employee.email}</p>
@@ -261,8 +265,9 @@ const Dashboard = () => {
     </button>
     </div>
         </div>
+        }
 
-        {assigningEmployee && (
+        {assigningEmployee && user?.role === 'manager' && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <h3 className="text-lg font-semibold mb-4">
