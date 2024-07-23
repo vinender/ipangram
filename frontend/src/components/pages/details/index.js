@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import http from '../../utils/http';
 import { Link } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -19,7 +19,7 @@ const Dashboard = () => {
   const [pageSize] = useState(4);
   const [nameFilter, setNameFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUserData();
@@ -130,8 +130,8 @@ const Dashboard = () => {
       <h1 className="text-2xl font-bold mb-4">Hi, {user.userName}</h1>
       <p className="mb-4">Email: {user.email}</p>
       <p className="mb-4">Address: {user.location}</p>
-      <p className="mb-4">Role: {user.role}</p>
-      <p className="mb-4">Department: {user.department}</p>
+        <p className="mb-4">Role: {user.role}</p>
+        {user.role === 'employee' && <p className="mb-4">Department: {user.department}</p>}
       
       {user.role === 'manager' && (
         <div className="mb-8">
@@ -164,7 +164,8 @@ const Dashboard = () => {
                   </form>
                 ) : (
                   <>
-                    <span className="flex-grow">{dept.name}</span>
+                    <span className=" hover:bg-gray-100 p-3 rounded-lg text-lg text-gray-600 flex-grow">{dept.name}</span>
+                    <button onClick={() => navigate('/department-employees/'+dept._id)} className="bg-green-600 text-white px-4 py-2 rounded mr-2">View</button>
                     <button onClick={() => setEditingDepartment(dept)} className="bg-yellow-500 text-white px-4 py-2 rounded mr-2">Edit</button>
                     <button onClick={() => handleDeleteDepartment(dept._id)} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
                   </>

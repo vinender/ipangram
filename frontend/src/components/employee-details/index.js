@@ -23,7 +23,7 @@ const EmployeeDetails = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <Link to="/dashboard" className="text-blue-500 hover:underline mb-4 inline-block">&larr; Back to Dashboard</Link>
+      <Link to="/details" className="text-blue-500 hover:underline mb-4 inline-block">&larr; Back to Dashboard</Link>
       <h1 className="text-2xl font-bold mb-4">Employee Details</h1>
       <div className="bg-white shadow-md rounded-lg p-6">
         <h2 className="text-xl font-semibold mb-2">{employee.userName}</h2>

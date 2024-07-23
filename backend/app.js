@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(cors());
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/websperodb');
+mongoose.connect('mongodb://localhost:27017/ipangram');
 
 // Routes
 const userRoutes = require('./routes/userRoutes');
@@ -31,7 +31,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Mount routes
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
-app.use('/api/departments', departmentRoutes);  
 app.use('/api', userRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/', authRoutes);

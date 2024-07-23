@@ -1,5 +1,4 @@
-// controllers/departmentController.js
-const Department = require('../models/Department'); // Adjust the path as needed
+const Department = require('../models/Department');
 const User = require('../models/User');
 
 
@@ -8,7 +7,7 @@ exports.createDepartment = async (req, res) => {
     const { name } = req.body;
     const department = new Department({
       name,
-      createdBy: req.user._id // Assuming you have user info in req.user from auth middleware
+      createdBy: req.user._id 
     });
     await department.save();
     res.status(201).json(department);
@@ -26,7 +25,6 @@ exports.getAllDepartments = async (req, res) => {
   }
 };
 
-// controllers/departmentController.js
 
 exports.updateDepartment = async (req, res) => {
     try {
@@ -59,25 +57,23 @@ exports.updateDepartment = async (req, res) => {
 
   exports.assignDepartment = async (req, res) => {
     try {
-        // return 'hello';
-        console.log('request',req)
       const { employeeId } = req.params;
       const { departmentId } = req.body;
-  
       console.log('Attempting to assign department:', { employeeId, departmentId });
+
+      
   
       // Validate ObjectIds
       if (!mongoose.Types.ObjectId.isValid(employeeId) || !mongoose.Types.ObjectId.isValid(departmentId)) {
         return res.status(400).json({ message: 'Invalid employee or department ID format' });
       }
+
+      
   
       // Find the employee
-         const employee = await User.findById(employeeId);
-      console.log('Found employee:', employee);
-  
+      const employee = await User.findById(employeeId);
       if (!employee) {
-        console.log('Employee not found for ID:', employeeId);
-        return res.status(404).json({ message: 'Employee not foundrfgr' });
+        return res.status(404).json({ message: 'Employee not found' });
       }
   
       if (employee.role !== 'employee') {
@@ -86,32 +82,77 @@ exports.updateDepartment = async (req, res) => {
   
       // Find the department
       const department = await Department.findById(departmentId);
-      console.log('Found department:', department);
-  
       if (!department) {
         return res.status(404).json({ message: 'Department not found' });
       }
   
       // Assign department
-      employee.department = departmentId;
-      await employee.save();
-      console.log('Department assigned successfully');
+      employee.department = {
+        id: department._id,
+        name: department.name
+      };
+      
+      console.log('Department to be assigned:', {
+        id: department._id,
+        name: department.name
+      });
+      console.log('Employee before save:', employee);
+      const updatedEmployee = await employee.save();
+      console.log('Employee after save:', updatedEmployee)
   
-      res.status(200).json({ 
-        message: 'Department assigned successfully', 
+      res.status(200).json({
+        message: 'Department assigned successfully',
         employee: {
-          id: employee._id,
-          userName: employee.userName,
-          email: employee.email,
-          role: employee.role,
-          location: employee.location,
-          department: employee.department
+          id: updatedEmployee._id,
+          userName: updatedEmployee.userName,
+          email: updatedEmployee.email,
+          role: updatedEmployee.role,
+          location: updatedEmployee.location,
+          department: updatedEmployee.department
         }
       });
-  
     } catch (error) {
-        // return '';
       console.error('Error in assignDepartment:', error);
       res.status(500).json({ message: 'Error assigning department', error: error.message });
     }
   };
+
+  // In your department controller
+exports.getDepartmentDetails = async (req, res) => {
+  try {
+    console.log('params',req.params)
+    const department = await Department.findById(req.params.id);
+    if (!department) {
+      return res.status(404).json({ message: 'Department not found' });
+    }
+    res.json(department);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching department details', error: error.message });
+  }
+};
+
+
+exports.getDepartmentEmployees = async (req, res) => {
+  try {
+    console.log('getDepartmentEmployees', req.params);
+    
+    const department = await Department.findById(req.params.id);
+    console.log('department name',department)
+    if (!department) {
+      return res.status(404).json({ message: 'Department not found' });
+    }
+
+    // Now, use the department name to find employees
+    const employees = await User.find({ 
+      'department': department.name, 
+      role: 'employee' 
+    }).select('-password');
+
+    res.json(employees);
+    // const response = res.json(employees);
+    console.log('department employees',employees)
+  } catch (error) {
+    console.error('Error in getDepartmentEmployees:', error);
+    res.status(500).json({ message: 'Error fetching department employees', error: error.message });
+  }
+};

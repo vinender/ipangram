@@ -6,6 +6,7 @@ import AuthPage from './components/pages/auth/login';
 import LoginPage from './components/pages/auth/login';
 import Dashboard from './components/pages/details';
 import EmployeeDetails from './components/employee-details';
+import DepartmentEmployees from './components/department-employees';
   
 function App() {
 
@@ -32,6 +33,13 @@ function App() {
           path="/employee/:id" 
           element={<Layout>
             <EmployeeDetails/>
+          </Layout>}
+         />
+
+         <Route 
+          path="/department-employees/:id" 
+          element={<Layout>
+            <DepartmentEmployees/>
           </Layout>}
          />
          

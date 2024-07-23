@@ -2,9 +2,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+
+
 const userSchema = new mongoose.Schema({
   department: {
-    type: String,
+    type: mongoose.Schema.Types.Mixed,
     default: null
   },
   userName: {
@@ -33,7 +35,6 @@ const userSchema = new mongoose.Schema({
   location: {
     type: String,
     required: true,
-    // unique: true,
     trim: true,
     lowercase: true,
   },

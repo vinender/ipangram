@@ -24,7 +24,7 @@ const LoginPage = () => {
       const payload = isLogin ? { email, password } : { email,userName, password, location, role };
       const response = await http.post(endpoint, payload);
       localStorage.setItem('token', response.data.token);
-      navigate('/');
+      response.data?.role == 'manager' ? navigate('/details') : navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'An error occurred');
     }
