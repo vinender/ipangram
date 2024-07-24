@@ -13,8 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(cors());
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/ipangram');
-
+// mongoose.connect('mongodb://localhost:27017/ipangram');
+mongoose.connect('mongodb+srv://vinendersingh91:ipangram@cluster0.vnrfzby.mongodb.net/')
 // Routes
 const userRoutes = require('./routes/userRoutes');
 
